@@ -13,12 +13,25 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.movieList) { result in
-                SingleView(model: SingleView.Model(id: result.id, title: result.title, overview: result.overview, imagePath: result.posterPath))
-                
+            if viewModel.movieList.count == 0 {
+                VStack(alignment: .center) {
+                    HStack {
+                        Text("Your search did not match any documents.")
+                            .font(.subheadline)
+                            .foregroundColor(.black.opacity(0.5))
+                            .lineLimit(2)
+                            .frame(alignment: .center)
+                    }
+                }
+                    
+            } else {
+                List(viewModel.movieList) { result in
+                    SingleView(model: SingleView.Model(id: result.id, title: result.title, overview: result.overview, imagePath: result.posterPath))
+                    
+                }
+                .listStyle(.plain)
+                .navigationTitle("Movie List")
             }
-            .listStyle(.plain)
-            .navigationTitle("Movie List")
         }
         .searchable(text: $viewModel.searchText)
         .onSubmit(of: .search) {
